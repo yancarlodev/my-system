@@ -1,0 +1,18 @@
+[user]
+    name = Yan Lepri
+    email = 20251CAS10010011@estudantes.ifpr.edu.br
+
+[core]
+    editor = vim
+    autocrlf = input
+    excludesfile = ~/.config/git/gitignore
+
+[pull]
+    rebase = true
+
+[alias]
+    co = checkout
+    cm = commit -m
+    st = status
+    br = branch
+    lol = log --graph --decorate --oneline --all
