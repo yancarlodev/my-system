@@ -5,15 +5,32 @@
   pkgs,
   ...
 }: {
-  xdg.configFile."hypr/hyprland.conf" = {
-    source = ./config/hypr/hyprland.conf;
-    force = true;
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = "gruvbox-dark-gtk";
+      package = pkgs.gruvbox-dark-gtk;
+    };
+
+    iconTheme = {
+      name = "gruvbox-dark-icons-gtk";
+      package = pkgs.gruvbox-dark-icons-gtk;
+    };
   };
 
-  xdg.configFile."hypr/hyprpaper.conf".source = ./config/hypr/hyprpaper.conf;
-  xdg.configFile."hypr/hyprlock.conf".source = ./config/hypr/hyprlock.conf;
-  xdg.configFile."hypr/hypridle.conf".source = ./config/hypr/hypridle.conf;
-  xdg.configFile."git/config".source = ./config/git/config;
+  xdg.configFile = {
+    "hypr/hyprland.conf" = {
+      source = ./config/hypr/hyprland.conf;
+      force = true;
+    };
+    "hypr/hyprpaper.conf".source = ./config/hypr/hyprpaper.conf;
+    "hypr/hyprlock.conf".source = ./config/hypr/hyprlock.conf;
+    "hypr/hypridle.conf".source = ./config/hypr/hypridle.conf;
+    "git/config".source = ./config/git/config;
+
+    "gtk-4.0/gtk.css".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/gtk-3.0/gtk.css";
+  };
 
   home.file.".icons".source = ../assets/themes/hyprcursor;
 
@@ -54,6 +71,7 @@
   home.packages = with pkgs; [
     vim
     bat
+    lolcat
     
     zsh
     oh-my-zsh
