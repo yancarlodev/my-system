@@ -27,12 +27,16 @@
     "hypr/hyprpaper.conf".source = ./config/hypr/hyprpaper.conf;
     "hypr/hyprlock.conf".source = ./config/hypr/hyprlock.conf;
     "hypr/hypridle.conf".source = ./config/hypr/hypridle.conf;
+    
+    "waybar/config.jsonc".source = ./config/waybar/config.jsonc;
+    "waybar/style.css".source = ./config/waybar/style.css;
+    
     "git/config".source = ./config/git/config;
 
     "gtk-4.0/gtk.css".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/gtk-3.0/gtk.css";
   };
 
-  home.file.".icons".source = ../assets/themes/hyprcursor;
+  home.file.".icons".source = ../assets/icons;
 
   # You can import other home-manager modules here
   imports = [
@@ -85,6 +89,7 @@
     vscode
     jetbrains.webstorm
     jetbrains.idea-ultimate
+    whatsapp-for-linux
   ];
 
   programs.home-manager.enable = true;
