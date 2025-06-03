@@ -89,6 +89,8 @@
     vscode
     jetbrains.webstorm
     jetbrains.idea-ultimate
+    jetbrains.goland
+
     whatsapp-for-linux
   ];
 
