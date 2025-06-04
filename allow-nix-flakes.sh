@@ -1,1 +1,2 @@
-export NIX_CONFIG="experimental-features = nix-command flakes"
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
