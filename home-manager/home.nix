@@ -43,8 +43,7 @@
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
 
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    ./modules/zsh.nix
   ];
 
   nixpkgs = {
@@ -75,10 +74,6 @@
   home.packages = with pkgs; [
     vim
     bat
-    lolcat
-    
-    zsh
-    oh-my-zsh
     
     brave
     google-chrome
@@ -92,7 +87,13 @@
     jetbrains.goland
 
     whatsapp-for-linux
+    translate-shell
+
+    direnv
+    nix-direnv
   ];
+
+  programs.bash.enable = false;
 
   programs.home-manager.enable = true;
   programs.git.enable = true;
