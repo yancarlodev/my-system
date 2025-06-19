@@ -115,7 +115,7 @@
     waybar
     mako
     libnotify
-    alacritty
+    kitty
     hyprlock
     hyprpaper
     hypridle

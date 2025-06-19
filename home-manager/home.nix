@@ -33,6 +33,8 @@
     
     "git/config".source = ./config/git/config;
 
+    "alacritty".source = ./config/alacritty;
+
     "gtk-4.0/gtk.css".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/gtk-3.0/gtk.css";
   };
 
@@ -42,7 +44,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-
+    ./modules/nvim.nix
     ./modules/zsh.nix
   ];
 
@@ -71,7 +73,10 @@
     homeDirectory = "/home/yanlepri";
   };
 
+  fonts.fontconfig.enable = true;
+
   home.packages = with pkgs; [
+    alacritty
     vim
     bat
     
@@ -91,6 +96,9 @@
 
     direnv
     nix-direnv
+
+    nerdfonts
+    tree
   ];
 
   programs.bash.enable = false;

@@ -66,9 +66,6 @@
 
       # Load additional completions
       fpath+=(${pkgs.zsh-completions}/share/zsh/site-functions)
-
-      # Custom prompt additions
-      PROMPT='%F{blue}%n@%m%f %F{green}%~%f %# '
     '';
 
     # Local configuration (will be sourced last)
