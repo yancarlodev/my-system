@@ -82,8 +82,11 @@
     
     brave
     google-chrome
+    qutebrowser
     
-    spotify
+    spotify-player
+    asciinema
+    tty-share
     discord
     
     vscode
@@ -97,8 +100,13 @@
     direnv
     nix-direnv
 
+    imagemagick
+    pywal16
     nerdfonts
     tree
+    vial
+    lf
+    figma-linux
   ];
 
   programs.bash.enable = false;

@@ -20,6 +20,18 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  networking.hosts = {
+    "0.0.0.0" = ["apresolve.spotify.com"];
+  };
+
+  virtualisation.docker = {
+    enable = false;
+
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -45,9 +57,12 @@
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager = {
-      gdm.enable = true;
+
+    displayManager.gdm = {
+      enable = true;
+      autoSuspend = false;
     };
+
     desktopManager.gnome.enable = false;
   };
 
@@ -106,6 +121,12 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  services.udev = {
+    packages = with pkgs; [
+      qmk-udev-rules
+    ];
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -126,7 +147,26 @@
     blueman
     wl-clipboard
     clipse
-  ];
+    qmk
+    via
+    vial
+    gnome-keyring
+    docker-compose
+    zip
+    unzip
+    wireguard-tools
+    code-server
+    ttyd
+    jdk21
+    go
+    gopls
+    delve
+    gnumake
+    rclone
+    stow
+    wezterm
+    chezmoi
+];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -142,11 +182,78 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 8080 30000 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = ["10.8.0.2/24"];
 
+      privateKeyFile = "/etc/wireguard/client_private.key";
+      
+      peers = [
+        {
+          publicKey = "CZ/i8vIIJweDQWpD8IoqaL8H8BYyo7A+rzZVpefJbkI=";
+          allowedIPs = [ "10.8.0.0/24" ];
+          endpoint = "srcrer.duckdns.org:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
+
+  systemd.services.foundryvtt = {
+    description = "Foundry Virtual Tabletop Server";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "simple";
+
+      User = "yanlepri";
+      Group = "users";
+
+      WorkingDirectory = "/home/yanlepri/foundryvtt";
+
+      ExecStart = ''
+        ${pkgs.nodejs}/bin/node main.js \
+          --dataPath=/home/yanlepri/foundrydata
+      '';
+
+      Restart = "always";
+      RestartSec = 10;
+
+      # Prevent systemd from killing it due to memory limits
+      LimitNOFILE = 1048576;
+    };
+  };
+
+  systemd.services.code-server = {
+    description = "VS Code Server";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "simple";
+      User = "yanlepri";
+      Group = "users";
+      WorkingDirectory = "/home/yanlepri";
+      ExecStart = ''
+        ${pkgs.code-server}/bin/code-server \
+          --app-name Grimoire \
+          --auth none \
+          --bind-addr 0.0.0.0:8080
+      '';
+
+      Restart = "on-failure";
+
+      Environment = [
+        "HOME=/home/yanlepri"
+        "JAVA_HOME=${pkgs.openjdk21}"
+        "PATH=${pkgs.openjdk21}/bin:${pkgs.code-server}/bin:/run/current-system/sw/bin"
+      ];
+    };
+  };
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
